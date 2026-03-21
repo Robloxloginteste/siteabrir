@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Termos & Políticas</title>
 
-  <!-- Favicon / ícone da aba -->
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="icon.png" />
 
   <style>
@@ -48,6 +48,7 @@
       background:rgba(100,100,100,0.15);
       backdrop-filter:blur(2px);
       animation: descend linear infinite;
+      border: none; /* garante que não tenha linha nenhuma */
     }
 
     @keyframes descend {
@@ -352,7 +353,11 @@
     };
 
     document.getElementById('cancelAgree').onclick = () => {
-      document.getElementById('agreePrompt').style.display = 'none';
+      const prompt = document.getElementById('agreePrompt');
+      prompt.classList.remove('show'); // inicia fade-out suave
+      setTimeout(() => {
+        prompt.style.display = 'none'; // esconde depois do fade
+      }, 500); // tempo da transição (0.5s)
     };
 
     document.getElementById('sendAgree').onclick = async () => {
@@ -384,7 +389,10 @@
         });
 
         if (response.ok) {
-          document.getElementById('agreePrompt').style.display = 'none';
+          const prompt = document.getElementById('agreePrompt');
+          prompt.classList.remove('show');
+          setTimeout(() => prompt.style.display = 'none', 500);
+
           const success = document.getElementById('successMessage');
           success.style.display = 'flex';
           setTimeout(() => success.classList.add('show'), 10);
