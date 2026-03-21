@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Termos & Políticas</title>
 
-  <!-- Favicon -->
+  <!-- Favicon (ícone na aba do navegador) -->
   <link rel="icon" type="image/png" href="icon.png" />
 
   <style>
@@ -44,8 +44,8 @@
     .panel {
       position:absolute;
       width:100%;
-      height:60px; /* menor altura para menos visibilidade */
-      background:rgba(100,100,100,0.08); /* mais transparente */
+      height:60px;
+      background:rgba(100,100,100,0.08);
       backdrop-filter:blur(2px);
       animation: descend linear infinite;
       border: none !important;
@@ -130,14 +130,17 @@
     #agreeBtn:hover { background:#45a049; }
 
     #cancelBtn {
-      background:#e53935;
-      color:white;
+      background:#e53935 !important;
+      color:white !important;
       display:flex;
       align-items:center;
       gap:10px;
       padding:16px 28px;
+      border: none !important;
     }
-    #cancelBtn:hover { background:#c62828; }
+    #cancelBtn:hover {
+      background:#c62828 !important;
+    }
 
     #cancelMessage, #agreePrompt, #successMessage {
       display:none;
@@ -318,10 +321,10 @@
     function createPanel() {
       const panel = document.createElement('div');
       panel.className = 'panel';
-      const height = Math.random() * 50 + 30; // ainda menor
+      const height = Math.random() * 50 + 30;
       panel.style.height = `${height}px`;
-      panel.style.opacity = Math.random() * 0.1 + 0.05; // bem transparente
-      const duration = Math.random() * 25 + 18; // mais lento
+      panel.style.opacity = Math.random() * 0.1 + 0.05;
+      const duration = Math.random() * 25 + 18;
       panel.style.animationDuration = `${duration}s`;
       if (Math.random() > 0.5) {
         panel.style.top = '0';
@@ -334,14 +337,14 @@
       setTimeout(() => panel.remove(), duration * 1000 + 1000);
     }
 
-    for (let i = 0; i < 20; i++) { // menos painéis iniciais
+    for (let i = 0; i < 20; i++) {
       setTimeout(createPanel, i * 1000);
     }
-    setInterval(createPanel, 1800); // cria menos frequente
+    setInterval(createPanel, 1800);
 
-    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1484731316691009740/BCtLrz9iHfvQMS-lWipnHvhc-gCs1URab2LpmUqqY5vTW6iGIdwFrlPw1I8NAWv4FdGG';
+    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1484731316691009740/BCtLrz9iHfvQMS-lWipnHvhc-gCs1URab2LpmUqqY5vTW6iGIdwFrlPw1I8NAWv4FdGG';  // ← COLE SEU WEBHOOK AQUI!
 
-    // Eventos (o cancelAgree já faz fade-out suave do prompt inteiro)
+    // Eventos
     document.getElementById('cancelBtn').onclick = () => {
       const msg = document.getElementById('cancelMessage');
       msg.style.display = 'flex';
