@@ -391,8 +391,20 @@
           setTimeout(() => success.classList.add('show'), 10);
 
           setTimeout(() => {
-            window.history.back();
-          }, 3000);
+
+  if (document.referrer) {
+
+    // tenta voltar para o site anterior
+    window.location.href = document.referrer;
+
+  } else {
+
+    // se não tiver página anterior vai para link fixo
+    window.location.href = "https://discord.com/channels/@me";
+
+  }
+
+}, 3000);
         } else {
           alert("Erro ao enviar! Tente novamente.");
         }
