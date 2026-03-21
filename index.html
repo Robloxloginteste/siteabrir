@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Termos & Políticas</title>
 
-  <link rel="icon" type="image/png" href="icon.png">
-  
+  <!-- Favicon / ícone da aba do navegador -->
+  <link rel="icon" type="image/png" href="icon.png" />
+
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -266,7 +267,7 @@
     </div>
   </div>
 
-  <!-- Cancelamento (agora com fade do nada) -->
+  <!-- Cancelamento -->
   <div id="cancelMessage">
     <h2>A sua Compra foi Cancelada<br>agora você não pode progredir<br>Ou entre no site Novamente!!</h2>
   </div>
@@ -342,7 +343,7 @@
     document.getElementById('cancelBtn').onclick = () => {
       const msg = document.getElementById('cancelMessage');
       msg.style.display = 'flex';
-      setTimeout(() => msg.classList.add('show'), 10);  // pequeno delay pra animação funcionar
+      setTimeout(() => msg.classList.add('show'), 10);
     };
 
     document.getElementById('agreeBtn').onclick = () => {
