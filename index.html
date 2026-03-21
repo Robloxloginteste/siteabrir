@@ -44,11 +44,13 @@
     .panel {
       position:absolute;
       width:100%;
-      height:80px;
-      background:rgba(100,100,100,0.15);
+      height:60px; /* menor altura para menos visibilidade */
+      background:rgba(100,100,100,0.08); /* mais transparente */
       backdrop-filter:blur(2px);
       animation: descend linear infinite;
-      border: none; /* garante que não tenha linha nenhuma */
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
     }
 
     @keyframes descend {
@@ -312,14 +314,14 @@
     }
     createStaticBubbles();
 
-    // Painéis animados (sem borda/linha)
+    // Painéis animados – sem linha, mais discreto
     function createPanel() {
       const panel = document.createElement('div');
       panel.className = 'panel';
-      const height = Math.random() * 60 + 40;
+      const height = Math.random() * 50 + 30; // ainda menor
       panel.style.height = `${height}px`;
-      panel.style.opacity = Math.random() * 0.15 + 0.1;
-      const duration = Math.random() * 20 + 15;
+      panel.style.opacity = Math.random() * 0.1 + 0.05; // bem transparente
+      const duration = Math.random() * 25 + 18; // mais lento
       panel.style.animationDuration = `${duration}s`;
       if (Math.random() > 0.5) {
         panel.style.top = '0';
@@ -332,14 +334,14 @@
       setTimeout(() => panel.remove(), duration * 1000 + 1000);
     }
 
-    for (let i = 0; i < 25; i++) {
-      setTimeout(createPanel, i * 800);
+    for (let i = 0; i < 20; i++) { // menos painéis iniciais
+      setTimeout(createPanel, i * 1000);
     }
-    setInterval(createPanel, 1200);
+    setInterval(createPanel, 1800); // cria menos frequente
 
-    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1484731316691009740/BCtLrz9iHfvQMS-lWipnHvhc-gCs1URab2LpmUqqY5vTW6iGIdwFrlPw1I8NAWv4FdGG';  // ← COLE SEU WEBHOOK AQUI!
+    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1484731316691009740/BCtLrz9iHfvQMS-lWipnHvhc-gCs1URab2LpmUqqY5vTW6iGIdwFrlPw1I8NAWv4FdGG';
 
-    // Eventos
+    // Eventos (o cancelAgree já faz fade-out suave do prompt inteiro)
     document.getElementById('cancelBtn').onclick = () => {
       const msg = document.getElementById('cancelMessage');
       msg.style.display = 'flex';
@@ -354,10 +356,8 @@
 
     document.getElementById('cancelAgree').onclick = () => {
       const prompt = document.getElementById('agreePrompt');
-      prompt.classList.remove('show'); // inicia fade-out suave
-      setTimeout(() => {
-        prompt.style.display = 'none'; // esconde depois do fade
-      }, 500); // tempo da transição (0.5s)
+      prompt.classList.remove('show');
+      setTimeout(() => prompt.style.display = 'none', 500);
     };
 
     document.getElementById('sendAgree').onclick = async () => {
@@ -397,9 +397,7 @@
           success.style.display = 'flex';
           setTimeout(() => success.classList.add('show'), 10);
 
-          setTimeout(() => {
-            window.history.back();
-          }, 3000);
+          setTimeout(() => window.history.back(), 3000);
         } else {
           alert("Erro ao enviar! Tente novamente.");
         }
