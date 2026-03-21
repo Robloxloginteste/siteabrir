@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Termos & Políticas</title>
+
+  <link rel="icon" type="image/png" href="icon.png">
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:#000;
+      color:#eee;
+      min-height:100vh;
+      overflow-x:hidden;
+      position:relative;
+    }
+
+    .bubbles {
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+    }
+    .bubble {
+      position:absolute;
+      background:#777777;
+      border-radius:50%;
+      pointer-events:none;
+      box-shadow:0 0 6px rgba(119,119,119,0.4);
+    }
+
+    .panels {
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:2;
+      overflow:hidden;
+    }
+
+    .panel {
+      position:absolute;
+      width:100%;
+      height:80px;
+      background:rgba(100,100,100,0.15);
+      border-bottom:1px solid rgba(150,150,150,0.2);
+      backdrop-filter:blur(2px);
+      animation: descend linear infinite;
+    }
+
+    @keyframes descend {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    @keyframes ascend {
+      0% { transform: translateY(100vh); }
+      100% { transform: translateY(-100%); }
+    }
+
+    .container {
+      position:relative;
+      z-index:10;
+      max-width:720px;
+      margin:30px auto;
+      padding:25px 20px;
+      background:rgba(20,20,20,0.88);
+      border-radius:16px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.9);
+      backdrop-filter:blur(6px);
+      border:1px solid rgba(255,255,255,0.07);
+      text-align:center;
+    }
+
+    .logo {
+      width:140px; height:140px;
+      border-radius:50%;
+      object-fit:cover;
+      border:5px solid rgba(255,255,255,0.15);
+      box-shadow:0 8px 25px rgba(0,0,0,0.6);
+      margin:20px 0 30px;
+    }
+
+    h1 { font-size:clamp(1.8rem,6vw,2.6rem); margin-bottom:20px; color:#fff; }
+    .main-text { font-size:clamp(1.2rem,4.5vw,1.5rem); font-weight:bold; margin:20px 0 35px; color:#ff5252; }
+    .terms-list {
+      text-align:left;
+      background:rgba(40,30,0,0.4);
+      padding:20px;
+      border-radius:12px;
+      border-left:5px solid #ff9800;
+      margin:0 auto 40px;
+      max-width:620px;
+    }
+    .terms-list ol { padding-left:28px; }
+    .terms-list li { margin-bottom:18px; font-size:clamp(1rem,3.8vw,1.15rem); line-height:1.5; }
+
+    .final-text { font-size:clamp(1.3rem,5vw,1.6rem); font-weight:bold; margin:40px 0 25px; color:#64b5f6; }
+    .pergunta { font-size:clamp(1.4rem,5.5vw,1.8rem); color:#ef5350; margin:30px 0 40px; font-weight:bold; }
+
+    .buttons {
+      display:flex;
+      justify-content:space-between;
+      max-width:520px;
+      margin:0 auto;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    button {
+      padding:16px 32px;
+      font-size:1.2rem;
+      font-weight:bold;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      transition:0.2s;
+    }
+
+    #agreeBtn {
+      background:#4CAF50;
+      color:white;
+      flex:1;
+    }
+    #agreeBtn:hover { background:#45a049; }
+
+    #cancelBtn {
+      background:#e53935;
+      color:white;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:16px 28px;
+    }
+    #cancelBtn:hover { background:#c62828; }
+
+    #cancelMessage, #agreePrompt, #successMessage {
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.92);
+      z-index:20;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      text-align:center;
+      padding:20px;
+      opacity:0;
+      transition: opacity 0.5s ease-out;
+    }
+
+    #cancelMessage.show, #agreePrompt.show, #successMessage.show {
+      display:flex;
+      opacity:1;
+    }
+
+    #cancelMessage h2 {
+      color:#ff1744;
+      font-size:clamp(2rem,8vw,3.5rem);
+      margin-bottom:20px;
+      line-height:1.2;
+    }
+
+    #agreePrompt h2 {
+      color:#4CAF50;
+      font-size:1.8rem;
+      margin-bottom:20px;
+    }
+    #agreePrompt p {
+      font-size:1.3rem;
+      max-width:600px;
+      margin-bottom:25px;
+    }
+
+    #agreePrompt .error {
+      color:#ff5252;
+      font-size:1.1rem;
+      margin:10px 0 0;
+      opacity:0;
+      transition: opacity 0.5s ease-out;
+      display:block;
+    }
+
+    #agreePrompt .error.show {
+      opacity:1;
+    }
+
+    #discordNick, #emailInput {
+      padding:14px;
+      font-size:1.2rem;
+      width:100%;
+      max-width:420px;
+      border-radius:8px;
+      border:2px solid #555;
+      background:#222;
+      color:white;
+      margin-bottom:20px;
+    }
+
+    .action-buttons button {
+      padding:14px 30px;
+      font-size:1.2rem;
+      margin:0 10px;
+    }
+
+    #sendAgree { background:#4CAF50; color:white; }
+    #sendAgree:hover { background:#45a049; }
+
+    #cancelAgree { background:#666; color:white; }
+
+    #successMessage h2 {
+      color:#4CAF50;
+      font-size:2.2rem;
+      margin-bottom:20px;
+      line-height:1.3;
+    }
+    #successMessage p {
+      font-size:1.4rem;
+      max-width:600px;
+      color:#ddd;
+    }
+
+    @media (max-width:500px) {
+      .container { margin:20px 12px; padding:20px 16px; }
+      .logo { width:120px; height:120px; }
+      .buttons { flex-direction:column; }
+      button { width:100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bubbles" id="bubbles"></div>
+  <div class="panels" id="panels"></div>
+
+  <div class="container">
+    <img src="https://i.imgur.com/9q8BiFx.png" alt="Logo" class="logo">
+
+    <h1>Termos & Políticas</h1>
+
+    <div class="main-text">
+      Aceitar os termos para continuar a compra do produto
+    </div>
+
+    <div class="terms-list">
+      <ol>
+        <li>Se algo na compra ou a pessoa que comprou não souber instalar ou usar o xit não terá reembolso.</li>
+        <li>Se a pessoa não sabe instalar Xit ou holograma pago não terá reembolso.</li>
+        <li>Se algum cliente fala que nos Xits Free somos scam ele tem 5 minutos para provar que o Xits free é Scam, se não tiver é ban imediato e se pedir reembolso não daremos.</li>
+      </ol>
+    </div>
+
+    <div class="final-text">
+      Termos e Política para continuar e prosseguir no pagamento:
+    </div>
+
+    <div class="pergunta">
+      Você aceita os Termos & Políticas e prosseguir em frente à compra?
+    </div>
+
+    <div class="buttons">
+      <button id="agreeBtn">Sim eu concordo Com os Termos & Politicas</button>
+      <button id="cancelBtn"><span style="font-size:1.4rem;">X</span> Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Cancelamento (agora com fade do nada) -->
+  <div id="cancelMessage">
+    <h2>A sua Compra foi Cancelada<br>agora você não pode progredir<br>Ou entre no site Novamente!!</h2>
+  </div>
+
+  <!-- Prompt Nick + Email -->
+  <div id="agreePrompt">
+    <h2>Bote o seu Nick do discord</h2>
+    <p>para saber que o dono Saiba que e você QUE esta comprando e Aceitando os Termos</p>
+    
+    <input type="text" id="discordNick" placeholder="...Bote o seu nick do discord aqui..." required>
+    
+    <input type="email" id="emailInput" placeholder="Seu email (obrigatório para contato)" required>
+    <div class="error" id="emailError">É opcional ter um @gmail.com, mas use um email válido para contato!</div>
+    
+    <div class="action-buttons">
+      <button id="sendAgree">Confirmar e Enviar</button>
+      <button id="cancelAgree">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Sucesso -->
+  <div id="successMessage">
+    <h2>O dono foi Notificado</h2>
+    <p>Agora você vai voltar pro lugar aonde clicou no link!</p>
+  </div>
+
+  <script>
+    // Bolinhas cinzas paradas
+    function createStaticBubbles() {
+      const container = document.getElementById('bubbles');
+      for (let i = 0; i < 300; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const size = Math.random() * 15 + 3;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${Math.random() * 100}vw`;
+        bubble.style.top = `${Math.random() * 100}vh`;
+        bubble.style.opacity = Math.random() * 0.5 + 0.3;
+        container.appendChild(bubble);
+      }
+    }
+    createStaticBubbles();
+
+    // Painéis animados
+    function createPanel() {
+      const panel = document.createElement('div');
+      panel.className = 'panel';
+      const height = Math.random() * 60 + 40;
+      panel.style.height = `${height}px`;
+      panel.style.opacity = Math.random() * 0.15 + 0.1;
+      const duration = Math.random() * 20 + 15;
+      panel.style.animationDuration = `${duration}s`;
+      if (Math.random() > 0.5) {
+        panel.style.top = '0';
+        panel.style.animationName = 'descend';
+      } else {
+        panel.style.bottom = '0';
+        panel.style.animationName = 'ascend';
+      }
+      document.getElementById('panels').appendChild(panel);
+      setTimeout(() => panel.remove(), duration * 1000 + 1000);
+    }
+
+    for (let i = 0; i < 25; i++) {
+      setTimeout(createPanel, i * 800);
+    }
+    setInterval(createPanel, 1200);
+
+    // Eventos
+    document.getElementById('cancelBtn').onclick = () => {
+      const msg = document.getElementById('cancelMessage');
+      msg.style.display = 'flex';
+      setTimeout(() => msg.classList.add('show'), 10);  // pequeno delay pra animação funcionar
+    };
+
+    document.getElementById('agreeBtn').onclick = () => {
+      const prompt = document.getElementById('agreePrompt');
+      prompt.style.display = 'flex';
+      setTimeout(() => prompt.classList.add('show'), 10);
+    };
+
+    document.getElementById('cancelAgree').onclick = () => {
+      document.getElementById('agreePrompt').style.display = 'none';
+    };
+
+    document.getElementById('sendAgree').onclick = async () => {
+      const nick = document.getElementById('discordNick').value.trim();
+      const email = document.getElementById('emailInput').value.trim();
+      const errorEl = document.getElementById('emailError');
+
+      if (!nick) {
+        alert("Por favor, bote seu nick do Discord!");
+        return;
+      }
+
+      if (!email || !email.includes('@')) {
+        errorEl.classList.add('show');
+        return;
+      }
+
+      errorEl.classList.remove('show');
+
+      const message = {
+        content: `**Novo cliente Aceitou os Termos & Politicas**\nO nick dele e: **${nick}**\nE o endereço de email dele e: **${email}**`
+      };
+
+      try {
+        const response = await fetch("/api/send", {
+        method: "POST",
+         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+        nick,
+        email
+      })
+    });
+
+        if (response.ok) {
+          document.getElementById('agreePrompt').style.display = 'none';
+          const success = document.getElementById('successMessage');
+          success.style.display = 'flex';
+          setTimeout(() => success.classList.add('show'), 10);
+
+          setTimeout(() => {
+            window.history.back();
+          }, 3000);
+        } else {
+          alert("Erro ao enviar! Tente novamente.");
+        }
+      } catch (error) {
+        alert("Erro na conexão: " + error.message);
+      }
+    };
+  </script>
+
+</body>
+</html>
+
+<script>
+document.onkeydown = function(e) {
+ if (e.keyCode == 123) {
+  return false;
+ }
+ if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+  return false;
+ }
+ if (e.ctrlKey && e.keyCode == 85) {
+  return false;
+ }
+};
+</script>
+
+<script>
+document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener("keydown", function(e) {
+
+    if (e.key === "F12") {
+        e.preventDefault();
+    }
+
+    if (e.ctrlKey && e.shiftKey && 
+       (e.key === "I" || e.key === "J" || e.key === "C")) {
+        e.preventDefault();
+    }
+
+    if (e.ctrlKey && e.key === "U") {
+        e.preventDefault();
+    }
+
+});
+
+setInterval(function() {
+    if (window.outerWidth - window.innerWidth > 200 || 
+        window.outerHeight - window.innerHeight > 200) {
+        document.body.innerHTML = "";
+    }
+}, 1000);
+</script>
